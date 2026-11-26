@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Box,
   Chip,
   Container,
   FormControlLabel,
@@ -11,63 +12,87 @@ import {
 import { FormsComparison } from './components/forms-comparison/FormsComparison';
 
 function App() {
-  const [offlineMode, setOfflineMode] = useState(false);
+  const [offlineMode, setOfflineMode] = useState(true);
   const [submissions, setSubmissions] = useState<string[]>([]);
 
   const handleSuccess = (origem: string) => {
     setSubmissions((prev) => [
-      `${new Date().toLocaleTimeString('pt-BR')} — Cadastro enviado via ${origem}`,
-      ...prev.slice(0, 4),
+      `${new Date().toLocaleTimeString('pt-BR')} — ${origem} (${offlineMode ? 'Simulação' : 'API :8080'})`,
+      ...prev.slice(0, 5),
     ]);
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Stack spacing={3}>
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={2}
-          sx={{
-            justifyContent: 'space-between',
-            alignItems: { xs: 'flex-start', sm: 'center' },
-          }}
-        >
-          <div>
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
-              SocialConnect — Mini-Laboratório A2
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Tema 6: React Hook Form vs Formik vs useState (Cadastro de Beneficiário)
-            </Typography>
-          </div>
+    <Box sx={{ minHeight: '100vh', borderTop: '4px solid #09090b', py: 4 }}>
+      <Container maxWidth="lg">
+        <Stack spacing={3}>
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={2}
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: { xs: 'flex-start', md: 'flex-end' },
+              pb: 2,
+              borderBottom: '1px solid #e4e4e7',
+            }}
+          >
+            <Box>
+              <Typography
+                sx={{
+                  fontFamily: 'Consolas, monospace',
+                  fontSize: 12,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: 'text.secondary',
+                  mb: 0.5,
+                }}
+              >
+                Avaliação A2 · Tema 06 · SocialConnect
+              </Typography>
+              <Typography variant="h4">
+                React Hook Form vs. Formik vs. useState
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                Mini-laboratório comparativo de cadastro de beneficiários (<code>POST /api/v1/beneficiarios</code>)
+              </Typography>
+            </Box>
 
-          <FormControlLabel
-            control={
-              <Switch
-                checked={offlineMode}
-                onChange={(e) => setOfflineMode(e.target.checked)}
+            <Paper elevation={0} sx={{ px: 2, py: 0.75, backgroundColor: '#ffffff' }}>
+              <FormControlLabel
+                sx={{ m: 0 }}
+                control={
+                  <Switch
+                    checked={offlineMode}
+                    onChange={(e) => setOfflineMode(e.target.checked)}
+                    size="small"
+                  />
+                }
+                label={
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                    {offlineMode ? 'Modo Simulação (sem API)' : 'API SocialConnect (:8080)'}
+                  </Typography>
+                }
               />
-            }
-            label={offlineMode ? 'Modo Simulação (sem API)' : 'API SocialConnect (:8080)'}
-          />
+            </Paper>
+          </Stack>
+
+          <FormsComparison offlineMode={offlineMode} onSuccess={handleSuccess} />
+
+          {submissions.length > 0 && (
+            <Paper elevation={0} sx={{ p: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
+                Últimos envios realizados
+              </Typography>
+              <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+                {submissions.map((item, idx) => (
+                  <Chip key={idx} label={item} size="small" variant="outlined" />
+                ))}
+              </Stack>
+            </Paper>
+          )}
         </Stack>
-
-        <FormsComparison offlineMode={offlineMode} onSuccess={handleSuccess} />
-
-        {submissions.length > 0 && (
-          <Paper elevation={1} sx={{ p: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>
-              Últimos envios realizados:
-            </Typography>
-            <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
-              {submissions.map((item, idx) => (
-                <Chip key={idx} label={item} size="small" color="primary" variant="outlined" />
-              ))}
-            </Stack>
-          </Paper>
-        )}
-      </Stack>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { Alert, Box, Button, Chip, Paper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { cadastrarBeneficiario } from '../../services/api';
+import { RenderBadge } from './RenderBadge';
 
 interface Props {
   offlineMode: boolean;
@@ -58,23 +59,50 @@ export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 2.5, height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-          useState (Controlado)
-        </Typography>
-        <Chip label={`Renders: ${renderCount.current}`} color="warning" size="small" />
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2.5,
+        height: '100%',
+        borderTop: '3px solid #f59e0b',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
+        <Box>
+          <Typography
+            sx={{
+              fontFamily: 'Consolas, monospace',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#92400e',
+              textTransform: 'uppercase',
+            }}
+          >
+            Controlled · Manual
+          </Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.25 }}>
+            useState Puro
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+            Um <code>useState</code> por campo. Re-renderiza a cada tecla + validação manual.
+          </Typography>
+        </Box>
+        <RenderBadge count={renderCount.current} tone="warning" />
       </Box>
 
       {feedback && (
-        <Alert severity={feedback.type} sx={{ mb: 1.5 }}>
+        <Alert severity={feedback.type} sx={{ mb: 1.5, py: 0.25 }}>
           {feedback.message}
         </Alert>
       )}
 
-      <Box component="form" onSubmit={handleSubmit} noValidate>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 'auto' }}>
         <TextField
           label="Nome"
+          placeholder="Ex: Maria da Silva"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           error={!!errors.nome}
@@ -85,7 +113,8 @@ export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
           required
         />
         <TextField
-          label="CPF"
+          label="CPF (11 dígitos)"
+          placeholder="12345678901"
           value={cpf}
           onChange={(e) => setCpf(e.target.value)}
           error={!!errors.cpf}
@@ -97,7 +126,8 @@ export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
           slotProps={{ htmlInput: { maxLength: 11 } }}
         />
         <TextField
-          label="Telefone"
+          label="Telefone (opcional)"
+          placeholder="11999999999"
           value={telefone}
           onChange={(e) => setTelefone(e.target.value)}
           error={!!errors.telefone}
@@ -106,7 +136,7 @@ export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
           size="small"
           margin="dense"
         />
-        <Button type="submit" variant="outlined" fullWidth disabled={submitting} sx={{ mt: 1.5 }}>
+        <Button type="submit" variant="outlined" fullWidth disabled={submitting} sx={{ mt: 2 }}>
           {submitting ? 'Enviando...' : 'Cadastrar (useState)'}
         </Button>
       </Box>

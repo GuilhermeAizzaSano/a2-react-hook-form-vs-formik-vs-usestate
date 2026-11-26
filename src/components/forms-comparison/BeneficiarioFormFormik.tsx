@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { useFormik } from 'formik';
-import { Alert, Box, Button, Chip, Paper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { cadastrarBeneficiario } from '../../services/api';
+import { RenderBadge } from './RenderBadge';
 
 interface Props {
   offlineMode: boolean;
@@ -52,23 +53,50 @@ export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
   });
 
   return (
-    <Paper elevation={2} sx={{ p: 2.5, height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-          Formik (useFormik)
-        </Typography>
-        <Chip label={`Renders: ${renderCount.current}`} color="info" size="small" />
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2.5,
+        height: '100%',
+        borderTop: '3px solid #3b82f6',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
+        <Box>
+          <Typography
+            sx={{
+              fontFamily: 'Consolas, monospace',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#1e40af',
+              textTransform: 'uppercase',
+            }}
+          >
+            Controlled · useFormik
+          </Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.25 }}>
+            Formik
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+            Estado centralizado no React. Re-renderiza a cada tecla e no <code>onBlur</code>.
+          </Typography>
+        </Box>
+        <RenderBadge count={renderCount.current} tone="info" />
       </Box>
 
       {feedback && (
-        <Alert severity={feedback.type} sx={{ mb: 1.5 }}>
+        <Alert severity={feedback.type} sx={{ mb: 1.5, py: 0.25 }}>
           {feedback.message}
         </Alert>
       )}
 
-      <Box component="form" onSubmit={formik.handleSubmit} noValidate>
+      <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 'auto' }}>
         <TextField
           label="Nome"
+          placeholder="Ex: Maria da Silva"
           name="nome"
           value={formik.values.nome}
           onChange={formik.handleChange}
@@ -81,7 +109,8 @@ export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
           required
         />
         <TextField
-          label="CPF"
+          label="CPF (11 dígitos)"
+          placeholder="12345678901"
           name="cpf"
           value={formik.values.cpf}
           onChange={formik.handleChange}
@@ -95,7 +124,8 @@ export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
           slotProps={{ htmlInput: { maxLength: 11 } }}
         />
         <TextField
-          label="Telefone"
+          label="Telefone (opcional)"
+          placeholder="11999999999"
           name="telefone"
           value={formik.values.telefone}
           onChange={formik.handleChange}
@@ -112,7 +142,7 @@ export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
           color="secondary"
           fullWidth
           disabled={formik.isSubmitting}
-          sx={{ mt: 1.5 }}
+          sx={{ mt: 2 }}
         >
           {formik.isSubmitting ? 'Enviando...' : 'Cadastrar (Formik)'}
         </Button>

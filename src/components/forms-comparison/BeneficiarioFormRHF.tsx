@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Box, Button, Chip, Paper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { beneficiarioSchema, type BeneficiarioFormData } from '../../schemas/beneficiarioSchema';
 import { cadastrarBeneficiario } from '../../services/api';
+import { RenderBadge } from './RenderBadge';
 
 interface Props {
   offlineMode: boolean;
@@ -45,23 +46,50 @@ export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 2.5, height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-          React Hook Form + Zod
-        </Typography>
-        <Chip label={`Renders: ${renderCount.current}`} color="success" size="small" />
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2.5,
+        height: '100%',
+        borderTop: '3px solid #10b981',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
+        <Box>
+          <Typography
+            sx={{
+              fontFamily: 'Consolas, monospace',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#065f46',
+              textTransform: 'uppercase',
+            }}
+          >
+            Uncontrolled · Ref + Zod
+          </Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.25 }}>
+            React Hook Form
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+            Lê valores direto do DOM via <code>register</code>. Não re-renderiza ao digitar.
+          </Typography>
+        </Box>
+        <RenderBadge count={renderCount.current} tone="success" />
       </Box>
 
       {feedback && (
-        <Alert severity={feedback.type} sx={{ mb: 1.5 }}>
+        <Alert severity={feedback.type} sx={{ mb: 1.5, py: 0.25 }}>
           {feedback.message}
         </Alert>
       )}
 
-      <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 'auto' }}>
         <TextField
           label="Nome"
+          placeholder="Ex: Maria da Silva"
           {...register('nome')}
           error={!!errors.nome}
           helperText={errors.nome?.message}
@@ -71,7 +99,8 @@ export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
           required
         />
         <TextField
-          label="CPF"
+          label="CPF (11 dígitos)"
+          placeholder="12345678901"
           {...register('cpf')}
           error={!!errors.cpf}
           helperText={errors.cpf?.message}
@@ -82,7 +111,8 @@ export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
           slotProps={{ htmlInput: { maxLength: 11 } }}
         />
         <TextField
-          label="Telefone"
+          label="Telefone (opcional)"
+          placeholder="11999999999"
           {...register('telefone')}
           error={!!errors.telefone}
           helperText={errors.telefone?.message}
@@ -90,7 +120,7 @@ export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
           size="small"
           margin="dense"
         />
-        <Button type="submit" variant="contained" fullWidth disabled={isSubmitting} sx={{ mt: 1.5 }}>
+        <Button type="submit" variant="contained" fullWidth disabled={isSubmitting} sx={{ mt: 2 }}>
           {isSubmitting ? 'Enviando...' : 'Cadastrar (RHF)'}
         </Button>
       </Box>
