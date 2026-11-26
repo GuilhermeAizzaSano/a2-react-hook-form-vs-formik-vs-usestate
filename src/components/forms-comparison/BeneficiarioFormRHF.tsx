@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
@@ -11,7 +11,7 @@ interface Props {
   onSuccess: (origem: string) => void;
 }
 
-export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
+export const BeneficiarioFormRHF = memo(function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
   const renderCount = useRef(0);
   renderCount.current += 1;
 
@@ -68,7 +68,7 @@ export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
               textTransform: 'uppercase',
             }}
           >
-            Uncontrolled · Ref + Zod
+            Uncontrolled · Ref
           </Typography>
           <Typography variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.25 }}>
             React Hook Form
@@ -126,4 +126,4 @@ export function BeneficiarioFormRHF({ offlineMode, onSuccess }: Props) {
       </Box>
     </Paper>
   );
-}
+});

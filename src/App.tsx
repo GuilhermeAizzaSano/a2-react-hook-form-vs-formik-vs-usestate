@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
   Box,
   Chip,
@@ -13,14 +13,16 @@ import { FormsComparison } from './components/forms-comparison/FormsComparison';
 
 function App() {
   const [offlineMode, setOfflineMode] = useState(true);
+  const offlineModeRef = useRef(offlineMode);
+  offlineModeRef.current = offlineMode;
   const [submissions, setSubmissions] = useState<string[]>([]);
 
-  const handleSuccess = (origem: string) => {
+  const handleSuccess = useCallback((origem: string) => {
     setSubmissions((prev) => [
-      `${new Date().toLocaleTimeString('pt-BR')} — ${origem} (${offlineMode ? 'Simulação' : 'API :8080'})`,
+      `${new Date().toLocaleTimeString('pt-BR')} — ${origem} (${offlineModeRef.current ? 'Simulação' : 'API :8080'})`,
       ...prev.slice(0, 5),
     ]);
-  };
+  }, []);
 
   return (
     <Box sx={{ minHeight: '100vh', borderTop: '4px solid #09090b', py: 4 }}>

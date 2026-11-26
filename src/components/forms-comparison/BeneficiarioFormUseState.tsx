@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { cadastrarBeneficiario } from '../../services/api';
 import { RenderBadge } from './RenderBadge';
@@ -8,7 +8,7 @@ interface Props {
   onSuccess: (origem: string) => void;
 }
 
-export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
+export const BeneficiarioFormUseState = memo(function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
   const renderCount = useRef(0);
   renderCount.current += 1;
 
@@ -22,7 +22,7 @@ export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
   const validate = () => {
     const nextErrors: { nome?: string; cpf?: string; telefone?: string } = {};
     if (nome.trim().length < 3) nextErrors.nome = 'Nome deve ter pelo menos 3 caracteres';
-    if (!/^\d{11}$/.test(cpf.trim())) nextErrors.cpf = 'CPF deve ter 11 dígitos numéricos';
+    if (!/^\d{11}$/.test(cpf.trim())) nextErrors.cpf = 'CPF deve ter exatamente 11 dígitos numéricos';
     if (telefone.trim() && !/^\d{10,11}$/.test(telefone.trim())) {
       nextErrors.telefone = 'Telefone deve ter 10 ou 11 dígitos';
     }
@@ -142,4 +142,4 @@ export function BeneficiarioFormUseState({ offlineMode, onSuccess }: Props) {
       </Box>
     </Paper>
   );
-}
+});

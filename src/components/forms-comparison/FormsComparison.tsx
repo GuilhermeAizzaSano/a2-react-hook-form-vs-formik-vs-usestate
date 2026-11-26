@@ -50,8 +50,8 @@ export function FormsComparison({ offlineMode, onSuccess }: Props) {
             <Typography variant="body2" color="text.primary">
               <strong>1.</strong> Digite o mesmo nome nos três formulários ·{' '}
               <strong>2.</strong> Repare no contador piscando a cada tecla no <strong>Formik</strong> e no{' '}
-              <strong>useState</strong> · <strong>3.</strong> Note que o <strong>React Hook Form</strong> permanece em{' '}
-              <strong>01</strong> até validar ou enviar.
+              <strong>useState</strong> · <strong>3.</strong> Note que o <strong>React Hook Form</strong> permanece{' '}
+              <strong>parado</strong> enquanto você digita (só atualiza ao validar ou enviar).
             </Typography>
           </Box>
           <Button

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { cadastrarBeneficiario } from '../../services/api';
@@ -15,7 +15,7 @@ interface FormValues {
   telefone: string;
 }
 
-export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
+export const BeneficiarioFormFormik = memo(function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
   const renderCount = useRef(0);
   renderCount.current += 1;
 
@@ -26,7 +26,7 @@ export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
     validate: (values) => {
       const errors: Partial<FormValues> = {};
       if (values.nome.trim().length < 3) errors.nome = 'Nome deve ter pelo menos 3 caracteres';
-      if (!/^\d{11}$/.test(values.cpf.trim())) errors.cpf = 'CPF deve ter 11 dígitos numéricos';
+      if (!/^\d{11}$/.test(values.cpf.trim())) errors.cpf = 'CPF deve ter exatamente 11 dígitos numéricos';
       if (values.telefone.trim() && !/^\d{10,11}$/.test(values.telefone.trim())) {
         errors.telefone = 'Telefone deve ter 10 ou 11 dígitos';
       }
@@ -149,4 +149,4 @@ export function BeneficiarioFormFormik({ offlineMode, onSuccess }: Props) {
       </Box>
     </Paper>
   );
-}
+});
